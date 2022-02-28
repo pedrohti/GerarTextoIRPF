@@ -1,17 +1,17 @@
-var platInvestimentos = ["Clear", "Mercado Bitcoin", "Binance", "Rico"];
-var radios = "";
-
 $(document).ready(function () {
-	platInvestimentos.forEach((e, i) => {
-		let checked = i == 0 ? "checked='checked'" : "";
+	$.getJSON("/assets/plataformas.json", function (data) {
+		data.forEach((e, i) => {
+			let checked = i == 0 ? "checked='checked'" : "";
 
-		$("#bttRadios").append(
-			`<div class="form-check">
-				<input class="form-check-input" type="radio" name="plataforma" value=${i} ${checked}>${e.trimEnd()}</input>
+			$("#bttRadios").append(
+				`<div class="form-check">
+				<input class="form-check-input" type="radio" name="plataforma" value=${i} ${checked}>${e.plataforma}</input>
 			</div>`
-		);
+			);
+		});
+	}).fail(function () {
+		alert("Não foi possivel ler o JSON.");
 	});
-	radios = $("input[name=plataforma]");
 });
 
 var empresa = $("#txtEmpresa"),
@@ -22,6 +22,17 @@ var empresa = $("#txtEmpresa"),
 	resultado = $("#lblResultado");
 
 const getPlataform = (opt) => {
+	var plataforma;
+	// $.getJSON("/assets/plataformas.json", function (data) {
+	// 	data.forEach((e, i) => {
+	// 		// if (i == opt) console.log(e.texto);
+	// 		plataforma = i == opt ? e.texto : "";
+	// 	});
+	// }).fail(function () {
+	// 	alert("Não foi possivel ler o JSON.");
+	// });
+
+	// console.log(opt);
 	let platformas = {
 		0: "Na Clear Corretora (02.332.886/0011-78)",
 		1: "No Mercado Bitcoin (18.213.434/0001-35)",
@@ -39,15 +50,13 @@ function copyToClipboard() {
 
 gerar.click((e) => {
 	e.preventDefault();
+	let radio = $(".form-check-input:checked")
+		.map(function () {
+			return $(this).val();
+		})
+		.get();
 
-	let plataforma;
-
-	for (var i = 0, length = radios.length; i < length; i++) {
-		if (radios[i].checked) {
-			plataforma = getPlataform(radios[i].value);
-			break;
-		}
-	}
+	let plataforma = getPlataform(radio[0]);
 
 	let totalPago = Math.round(qtd.val() * precoMedio.val().replace(",", "."));
 	let texto = `${qtd.val()} ações de ${empresa.val()} (${codigo.val()}). A um preço médio de R$ ${precoMedio.val()} e custo total de R$ ${totalPago}. ${plataforma}`;
