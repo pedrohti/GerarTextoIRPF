@@ -1,0 +1,36 @@
+label,
+h3 {
+	font-weight: bold;
+}
+
+body {
+	font-family: "Open Sans", sans-serif;
+	background-color: #004666;
+	color: white;
+}
+
+h3 {
+	text-align: center;
+}
+
+#lblResultado {
+	color: lime;
+}
+
+input[type="radio"]:checked:after {
+	width: 15px;
+	height: 15px;
+	border-radius: 15px;
+	top: -2px;
+	left: -1px;
+	position: relative;
+	background-color: #ffa500;
+	content: "";
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid white;
+}
+
+.container {
+	width: 30%;
+}
