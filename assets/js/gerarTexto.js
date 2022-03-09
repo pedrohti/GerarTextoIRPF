@@ -34,6 +34,13 @@ function copyToClipboard(texto) {
 	navigator.clipboard.writeText(texto);
 }
 
+function clearInputs() {
+	empresa.val("");
+	codigo.val("");
+	qtd.val("");
+	precoMedio.val("");
+}
+
 var formatter = new Intl.NumberFormat("pt-BR", {
 	style: "currency",
 	currency: "BRL",
@@ -50,12 +57,14 @@ gerar.click((e) => {
 
 	let plataforma = getPlataforma(radio[0]);
 
-	let totalPago = qtd.val() * precoMedio.val().replace(",", ".");
+	let totalPago =
+		qtd.val() * precoMedio.val().replace(",", ".").replace("R$", "");
 	let texto =
 		`${qtd.val()} ações de ${empresa.val()} (${codigo.val()}). A um custo total de ${formatter.format(
 			totalPago
 		)}. ${plataforma}`.toUpperCase();
 
+	clearInputs();
 	resultado.text(texto);
 	copyToClipboard(texto);
 });
