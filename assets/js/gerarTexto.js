@@ -60,9 +60,10 @@ gerar.click((e) => {
 	let totalPago =
 		qtd.val() * precoMedio.val().replace(",", ".").replace("R$", "");
 	let texto =
-		`${qtd.val()} ações de ${empresa.val()} (${codigo.val()}). A um custo total de ${formatter.format(
+		`${codigo.val()} - ${empresa.val()}: ${qtd.val()} ações a um custo total de R$ ${formatter.format(
 			totalPago
 		)}. ${plataforma}`.toUpperCase();
+	// `${qtd.val()} ações de ${empresa.val()} (${codigo.val()}). A um custo total de ${formatter.format(totalPago)}. ${plataforma}`.toUpperCase();
 
 	clearInputs();
 	resultado.text(texto);
