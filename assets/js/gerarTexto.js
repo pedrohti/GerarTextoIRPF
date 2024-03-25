@@ -1,11 +1,5 @@
-var plataformas = ["Clear", "Mercado Bitcoin", "Binance", "Rico"];
-
-var cnpjs = {
-	0: "Na Clear Corretora (02.332.886/0011-78)",
-	1: "No Mercado Bitcoin (18.213.434/0001-35)",
-	2: "Na Binance (37.512.394/0001-77)",
-	3: "Na Rico Corretora (02.332.886/0016-82)",
-};
+var pls = './assets/corretoras.json'
+var corretoras
 
 var empresa = $("#txtEmpresa"),
 	codigo = $("#txtCodigo"),
@@ -14,25 +8,23 @@ var empresa = $("#txtEmpresa"),
 	gerar = $("#bttGerar"),
 	resultado = $("#lblResultado");
 
-$(document).ready(function () {
-	plataformas.forEach((e, i) => {
-		let checked = i == 0 ? "checked='checked'" : "";
-
-		$("#bttRadios").append(
-			`<div class="form-check">
-				<input class="form-check-input" type="radio" name="plataforma" value=${i} ${checked}>${e}</input>
-			</div>`
-		);
-	});
+$(document).ready(() => {
+	fetch(pls)
+	.then(response => response.json())
+	.then(data => corretoras = data)
+	.then(() => {
+		corretoras.forEach((e, i) => {
+			let checked = i == 0 ? "checked='checked'" : "";
+			$("#bttRadios").append(
+				`<div class="form-check">
+					<input class="form-check-input" type="radio" name="corretora" value=${i} ${checked}>${e.nome}</input>
+				</div>`
+			);
+		})
+	})
 });
 
-const getPlataforma = (opt) => {
-	return cnpjs[opt];
-};
-
-function copyToClipboard(texto) {
-	navigator.clipboard.writeText(texto);
-}
+const copyToClipboard = (texto) => navigator.clipboard.writeText(texto);
 
 function clearInputs() {
 	empresa.val("");
@@ -52,18 +44,10 @@ gerar.click((e) => {
 	let radio = $(".form-check-input:checked")
 		.map(function () {
 			return $(this).val();
-		})
-		.get();
+		}).get();
 
-	let plataforma = getPlataforma(radio[0]);
-
-	let totalPago =
-		qtd.val() * precoMedio.val().replace(",", ".").replace("R$", "");
-	let texto =
-		`${codigo.val()} - ${empresa.val()}: ${qtd.val()} ações a um custo total de R$ ${formatter.format(
-			totalPago
-		)}. ${plataforma}`.toUpperCase();
-	// `${qtd.val()} ações de ${empresa.val()} (${codigo.val()}). A um custo total de ${formatter.format(totalPago)}. ${plataforma}`.toUpperCase();
+	let totalPago = qtd.val() * precoMedio.val().replace(",", ".").replace("R$", "");
+	let texto = `${codigo.val()} - ${empresa.val()}: ${qtd.val()} ações a um custo total de R$ ${formatter.format(totalPago)} em ${corretoras[radio[0]].nome} (${corretoras[radio[0]].cnpj})`.toUpperCase();
 
 	clearInputs();
 	resultado.text(texto);
